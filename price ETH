@@ -1,0 +1,67 @@
+// Fetches the price of Ethereum from CoinGecko API
+async function fetchEthPrice() {
+  try {
+    const response = await fetch(
+      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+    );
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch Ethereum price');
+    }
+    
+    const data = await response.json();
+    const ethPrice = data.ethereum.usd;
+    
+    return ethPrice;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Updates the price on the webpage
+function updatePrice(price) {
+  const priceElement = document.getElementById('eth-price');
+  priceElement.textContent = `$${price}`;
+}
+
+// Periodically fetches and updates the price every 10 seconds
+function trackPrice() {
+  fetchEthPrice()
+    .then((price) => {
+      updatePrice(price);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    
+  setTimeout(trackPrice, 10000);
+}
+
+// Start tracking the price
+trackPrice();
+
+
+In this code, we have three main functions:
+
+fetchEthPrice() fetches the price of Ethereum from the CoinGecko API. It uses the fetch function to make an HTTP GET request and retrieves the price in USD.
+updatePrice(price) updates the price on the webpage. It selects the HTML element with the ID "eth-price" and sets its text content to the current price.
+trackPrice() periodically fetches and updates the price every 10 seconds. It calls fetchEthPrice() and updatePrice() in a loop using setTimeout().
+To use this code, you need to have an HTML page with an element that has the ID "eth-price" where the price will be displayed. For example:
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethereum Price Tracker</title>
+</head>
+<body>
+  <h1>Ethereum Price:</h1>
+  <p id="eth-price">$0.00</p>
+  
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+Save the JavaScript code in a file named "script.js" and make sure it's in the same directory as the HTML file. When you open the HTML page in a web browser, it will start tracking the price of Ethereum and update the displayed price every 10 seconds.
